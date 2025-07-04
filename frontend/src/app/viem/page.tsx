@@ -9,18 +9,15 @@ import {
   parseEther,
   formatEther,
 } from 'viem';
+import 'viem/window'
 import { mainnet, anvil } from 'viem/chains';
+
+import { Button } from "@/components/ui/button"
 
 import { abi } from '@/abi/kk-coin-abi';
 
 const contractAddress = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'; // Replace with your contract address
 
-// Extend the Window interface to include ethereum
-declare global {
-  interface Window {
-    ethereum?: any;
-  }
-}
 
 export default function Home() {
   const [balance, setBalance] = useState<string>('0');
@@ -28,17 +25,17 @@ export default function Home() {
 
   const getBalance = async () => {
     if (window.ethereum) {
-      const walletClient = createWalletClient({
-        chain: anvil,
-        transport: custom(window.ethereum),
-      });
+      // const walletClient = createWalletClient({
+      //   chain: anvil,
+      //   transport: custom(window.ethereum),
+      // });
 
       const publicClient = createPublicClient({
         chain: anvil,
         transport: http(),
       });
       try {
-          const [currentAddress] = await walletClient.getAddresses();
+          // const [currentAddress] = await walletClient.getAddresses();
           const balance = await publicClient.getBalance({ address: contractAddress });
           setBalance(balance.toString());
           console.log('Balance:', balance.toString());
@@ -153,20 +150,16 @@ export default function Home() {
 
   return (
     <div className='grid items-center justify-items-center p-8 pb-20 gap-16 '>
-      <button
+      <Button
         onClick={getBlockNumber}
-        className='bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition-colors duration-200'
-        style={{ fontFamily: 'var(--font-geist-sans)' }}
       >
         getBlockNumber
-      </button>
-      <button
+      </Button>
+      <Button
         onClick={getAddress}
-        className='bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition-colors duration-200'
-        style={{ fontFamily: 'var(--font-geist-sans)' }}
       >
         getAddress
-      </button>
+      </Button>
       <div>
         <label
           htmlFor='Balance'
@@ -174,12 +167,12 @@ export default function Home() {
         >
           Balance: {balance}
         </label>
-        <button
+        <Button
           onClick={getBalance}
-          className='mt-2 bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition-colors duration-200'
+
         >
           getBalance
-        </button>
+        </Button>
       </div>
 
       <div>
@@ -199,21 +192,19 @@ export default function Home() {
           value={amount}
           onChange={(e) => setAmount(Number(e.target.value))}
         />
-        <button
+        <Button
           onClick={buyCoffee}
-          className='mt-2 bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition-colors duration-200'
         >
           Buy Coffee
-        </button>
+        </Button>
       </div>
 
       <div>
-        <button
+        <Button
           onClick={withdraw}
-          className='mt-2 bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition-colors duration-200'
         >
           Withdraw
-        </button>
+        </Button>
       </div>
     </div>
   );
